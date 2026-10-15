@@ -30,7 +30,7 @@ button.danger:hover{background:#5d2b31}
 
 /* Panel */
 .panel{display:block;width:924px;height:650px;min-width:924px;margin:0 auto;border-radius:12px;box-shadow:0 10px 30px #0008;font-family:Arial,Helvetica,sans-serif;user-select:none;-webkit-user-select:none}
-.title{font-size:22px;font-weight:700;letter-spacing:1.5px;fill:#1f2a3a}
+.title{font-size:19px;font-weight:700;letter-spacing:1px;fill:#1f2a3a}
 .subtitle{font-size:10px;fill:#6b7787;letter-spacing:.6px}
 .footer{font-family:"Courier New",monospace;font-size:12px;fill:#3a4553}
 .cap{font-size:8px;fill:#6b7787;text-anchor:middle;letter-spacing:.5px;pointer-events:none}
@@ -65,6 +65,8 @@ button.danger:hover{background:#5d2b31}
 .w-drag{fill:none;stroke:#2a7fd6;stroke-width:3;stroke-dasharray:6 5;stroke-linecap:round;pointer-events:none}
 
 .w-out,.w-core,.w-shine,.w-flow{stroke-linejoin:round}
+.w-jet{fill:none;stroke:#4fc3f7;stroke-width:3;stroke-linecap:round;stroke-dasharray:6 8;animation:jet .3s linear infinite}
+@keyframes jet{to{stroke-dashoffset:-14}}
 #zoomctl{position:fixed;right:10px;bottom:10px;z-index:50;display:flex;align-items:center;gap:6px;background:#101520e6;border:1px solid #2a3445;border-radius:10px;padding:5px 8px;box-shadow:0 4px 14px #0008}
 #zoomctl button{padding:6px 12px;font-size:14px;line-height:1}
 #zoomctl span{min-width:42px;text-align:center;font-size:12px;color:#cfd8e6}
@@ -104,21 +106,36 @@ button.danger:hover{background:#5d2b31}
       <linearGradient id="gGlass" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#cfe9f5" stop-opacity=".9"/><stop offset=".5" stop-color="#ffffff" stop-opacity=".95"/><stop offset="1" stop-color="#b8d4e2" stop-opacity=".9"/></linearGradient>
       <radialGradient id="gGlowY"><stop offset="0" stop-color="#ffffff"/><stop offset=".35" stop-color="#fff1a6"/><stop offset="1" stop-color="#ffc400" stop-opacity="0"/></radialGradient>
       <filter id="blur6" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="6"/></filter>
+      <mask id="wetMask" maskUnits="userSpaceOnUse" x="0" y="328" width="924" height="650"><g id="wetBins"></g></mask>
+      <filter id="blurScene" filterUnits="userSpaceOnUse" x="0" y="328" width="924" height="650"><feGaussianBlur stdDeviation="7"/></filter>
       <filter id="shadow" x="-10%" y="-10%" width="125%" height="130%"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity=".35"/></filter>
     </defs>
 
     <rect x="0" y="328" width="924" height="650" fill="url(#gBoard)"/>
     <rect x="3" y="331" width="918" height="644" rx="10" fill="none" stroke="#b9c2cc" stroke-width="1.5"/>
     <rect x="3" y="965" width="918" height="10" fill="#cfd6de"/>
-    <text class="title" x="70" y="369">SYSTEM PENERANGAN BODY KENDARAAN</text>
-    <text class="subtitle" x="72" y="383">SIMULATOR WIRING &#8226; MERAH = (+) &#8226; HITAM = MASSA (E)</text>
+    <g id="scene">
+    <text class="title" x="70" y="353">SYSTEM KELISTRIKAN</text>
+    <text class="title" x="70" y="373">BODY KENDARAAN</text>
+    <text class="subtitle" x="72" y="387">SIMULATOR WIRING &#8226; MERAH = (+) &#8226; HITAM = MASSA (E)</text>
     <text class="footer" x="8" y="975">Smk tunas harapan/Teknik Kendaraan Ringan</text>
+    <text class="footer" x="916" y="975" text-anchor="end">BY RafkaVL Production</text>
 
     <g id="art"></g>
     <g id="ctls"></g>
     <g id="wires"></g>
     <g id="pins"></g>
+    </g>
     <g id="drag"></g>
+    <g id="fogLayer" mask="url(#wetMask)" pointer-events="none" style="display:none">
+      <g filter="url(#blurScene)"><rect x="0" y="328" width="924" height="650" fill="url(#gBoard)"/><use href="#scene"/></g>
+      <rect x="0" y="328" width="924" height="650" fill="#dfe9f1" opacity=".45"/>
+      <g id="drops"></g>
+    </g>
+    <g id="fxo" pointer-events="none">
+      <g id="pwspray" class="fx" opacity="0"><path class="w-jet" d="M892 610 Q918 570 906 515"/><path class="w-jet" d="M892 614 Q920 600 920 560"/><path class="w-jet" d="M892 618 Q912 585 890 545"/></g>
+      <g id="bigwiper" class="fx" opacity="0"><line x1="462" y1="978" x2="462" y2="628" stroke="#2b2f36" stroke-width="5" stroke-linecap="round"/><line x1="462" y1="628" x2="462" y2="170" stroke="#0e1014" stroke-width="9" stroke-linecap="round"/><circle cx="462" cy="978" r="8" fill="#59616b" stroke="#0e1014"/></g>
+    </g>
   </svg>
 
   <details class="help">
@@ -129,9 +146,10 @@ button.danger:hover{background:#5d2b31}
       <tr><td>Fuse/sekring + Baterai</td><td>Kotak BATT: tiga baris pin merah (kiri = INPUT, kanan = OUTPUT) dan baris 15 / B+ (15 = petunjuk input, B+ = petunjuk output) bekerja sama seperti sekring biasa: input dan output satu baris tersambung. Tidak ada yang otomatis bertegangan. Satu-satunya sumber +12 V adalah B+ di pojok kanan bawah. 5 pin baris IG saling terhubung dan hanya bertegangan jika kunci ON dan kunci dikabel dari B+ pojok. Urutan: IG kunci, lalu IG bawah sekring, lalu input sekring.</td></tr>
       <tr><td>Massa (E)</td><td>Sumber massa: 6 pin hitam kolom kiri dan 5 pin hitam kolom kanan (MASSA). Pin E milik lampu, klakson, flasher, lampu kabut, lampu plat nomor dan motor wiper harus dikabel ke pin massa itu. Selama E belum terpasang, beban tidak menyala.</td></tr>
       <tr><td>Saklar kombinasi</td><td><b>Tuas kanan:</b> ketuk ujung tuas = putar lampu (OFF / TAIL / HEAD); ketuk badan tuas = sein atas/bawah (netral / kiri / kanan); tombol kecil DIM = tuas dim (N = netral/dekat, J = jauh, T = tembak).<br><b>Tuas kiri:</b> wiper atas/bawah (OFF / LOW / HIGH).<br><b>Kotak segitiga</b> di tengah = hazard. <b>Tombol H</b> di bawahnya = klakson.<br>Tiga pin <code>30</code> hanya input dan tidak saling terhubung: 30 atas = input lampu utama, 30 tengah = input TAIL, 30 bawah = input hazard. <code>TAIL</code> kiri &amp; kanan: tersambung ke 30 tengah saat lampu TAIL atau HEAD. <code>L</code> (atas) = lampu dekat: tersambung ke 30 atas saat HEAD dan dim netral. <code>H</code> (atas) = lampu jauh: tersambung ke 30 atas saat HEAD dan dim J / T. <code>L/F</code> = input kedip dari terminal L flasher; diteruskan ke <code>L</code> (sein kiri) atau <code>R</code> (sein kanan) sesuai tuas / hazard. Pin <code>15</code> = jalur IG (lewat flasher). Hazard: 30 bawah tersambung ke <code>B/F</code>. <code>H</code> (bawah) = klakson, saat ditekan tersambung ke massa (Active LOW) untuk memicu pin 85 relay.</td></tr>
-      <tr><td>Pin wiper</td><td><b>Dari saklar wiper</b> (kotak kiri): pin 30 tersambung ke L (LOW), H (HIGH) atau 0 (OFF) sesuai tuas kiri; tombol bulat di kotak ini ikut mengganti posisi. <b>Menuju wiper</b> (baris 30, L, H, 0, E): hubungkan L, H, 0 dari kotak kiri, dan E ke massa. Motor berputar pelan jika L dapat +12 V, cepat jika H.</td></tr>
+      <tr><td>Pin wiper</td><td><b>Dari saklar wiper</b> (kotak kiri): pin 30 tersambung ke L (LOW), H (HIGH) atau 0 (OFF) sesuai tuas kiri; tombol bulat di kotak ini ikut mengganti posisi. <b>Menuju wiper</b> (baris 30, L, H, 0, E): hubungkan L, H, 0 dari kotak kiri, dan E ke massa. Pin 30 (B) dinamo harus dapat +12 V dari IG. Pin 0 = S, L = +1 (pelan), H = +2 (cepat): motor berputar pelan jika L dapat +12 V, cepat jika H.</td></tr>
       <tr><td>Relay (4 buah)</td><td>Koil aktif jika 86 mendapat +12 V dan 85 terhubung massa. Saat aktif, 30 &#8596; 87 tersambung (LED relay menyala).</td></tr>
       <tr><td>Flasher</td><td>B diberi +12 V dan E ke massa. Pin L baru berdenyut jika L dikabel ke L/F dan tuas sein atau hazard digerakkan.</td></tr>
+      <tr><td>Saklar &amp; pompa washer</td><td>Pin X dan Y ada di kotak pin wiper (di samping L / H). Tahan tombol kecil W di bawah tuas wiper: X dan Y tersambung. Pompa menyemprot jika B mendapat +12 V dan E terpasang massa; layar canvas jadi buram saat disemprot; bagian yang dilewati blade wiper menjadi bersih sesuai gerakannya. Wiper berhenti jika saklar OFF atau kabelnya dicabut; jika jalur S terpasang, wiper menyelesaikan satu sapuan ke posisi parkir dulu.</td></tr>
       <tr><td>Switch rem</td><td>Pin 30 &#8596; 15 tersambung saat pedal diinjak. Ketuk batang hitam untuk injak / lepas.</td></tr>
       <tr><td>Knob &amp; kunci</td><td>Saklar ON/OFF biasa: knob (30 &#8596; 15), kunci kontak (IG &#8596; 15) saat ON. Knob di samping kunci dipakai sebagai saklar lampu mundur.</td></tr>
       <tr><td>Lampu plat nomor</td><td>Menyala jika pin 15 mendapat +12 V (misal dari pin TAIL) dan E terpasang massa.</td></tr>
@@ -204,6 +222,8 @@ P('bn.15', 412, 778, '15'); P('bn.E', 444, 778, 'E', 'b', { gnd: 1 });
 P('tl.E', 98, 782, 'E', 't', { gnd: 1 }); P('tl.S', 134, 782, 'S', 't'); P('tl.LK', 195, 782, 'LK', 't'); P('tl.REM', 255, 782, 'REM', 't'); P('tl.R', 304, 782, 'R', 't');
 P('tr.R', 551, 782, 'R', 't'); P('tr.REM', 601, 782, 'REM', 't'); P('tr.LK', 660, 782, 'LK', 't'); P('tr.S', 721, 782, 'S', 't'); P('tr.E', 757, 782, 'E', 't', { gnd: 1 });
 P('bp.B+', 764, 853, 'B+', 't');
+// Washer
+P('ws.X', 575, 648, 'X'); P('ws.Y', 575, 676, 'Y'); P('pw.B', 825, 665, 'B'); P('pw.E', 880, 665, 'E', 'b', { gnd: 1 });
 
 const PIN = {}; PINS.forEach((p) => (PIN[p.id] = p));
 const PLUS_SRC = ['bp.B+']; // satu-satunya sumber aki: B+ pojok kanan bawah (pin 15 & B+ dekat sekring hanya titik petunjuk)
@@ -214,7 +234,7 @@ const PIN_NAME = {
   gl: 'Massa', sl: 'Lampu kota/sein kiri', hl: 'Lampu kepala kiri', hr: 'Lampu kepala kanan', sr: 'Lampu kota/sein kanan',
   wp: 'Motor wiper', g: 'Lampu kabut', hn: 'Klakson', fl: 'Flasher', bt: 'Baterai', ig: 'Kontak IG', cs: 'Saklar kombinasi',
   dA: 'Dimmer A', dB: 'Dimmer B', fu: 'Sekring', kn: 'Saklar knob', ky: 'Kunci kontak', bn: 'Tombol oval',
-  tl: 'Lampu belakang kiri', tr: 'Lampu belakang kanan', bp: 'Baterai B+'
+  tl: 'Lampu belakang kiri', tr: 'Lampu belakang kanan', bp: 'Baterai B+', ws: 'Saklar washer', pw: 'Pompa washer'
 };
 function pinName(id) {
   const m = /^r(\d)\./.exec(id); if (m) return 'Relay ' + (+m[1] + 1);
@@ -222,7 +242,7 @@ function pinName(id) {
 }
 
 /* ---------- STATE ---------- */
-const S = { wires: [], lamp: 0, sein: 0, hazard: false, wiper: 0, dim: 0, horn: false, dimA: 0, dimB: 0, knob: false, key: false, brake: false, btn: false, flash: false };
+const S = { wires: [], lamp: 0, sein: 0, hazard: false, wiper: 0, dim: 0, horn: false, wash: false, dimA: 0, dimB: 0, knob: false, key: false, brake: false, btn: false, flash: false };
 const LAMP_T = ['OFF', 'TAIL', 'HEAD'], SEIN_T = ['NETRAL', 'KIRI', 'KANAN'], DIM_T = ['L', 'H', '0'];
 const WIP_T = ['OFF', 'LOW', 'HIGH'], DM_T = ['NETRAL', 'JAUH', 'TEMBAK'];
 let wireColor = '#d32f2f';
@@ -242,6 +262,7 @@ function build(coil, flAct) {
   [['bt.1', 'bt.2'], ['bt.3', 'bt.4'], ['bt.5', 'bt.6'], ['bt.15', 'bt.B+']].forEach(([a, b]) => uni(a, b)); // sekring: input (kiri) -> output (kanan)
   if (S.brake) uni('fu.30', 'fu.15'); // switch rem: tersambung saat pedal diinjak
   if (S.btn) uni('bn.15', 'bn.E');
+  if (S.wash) uni('ws.X', 'ws.Y'); // saklar washer (tahan)
   uni('dA.30', ['dA.L', 'dA.H', 'dA.0'][[2, 0, 1][S.wiper]]); // tuas wiper: OFF = 0, LOW = L, HIGH = H
   // Saklar kombinasi (sesuai petunjuk, ubah di sini bila berbeda)
   // tiga pin 30 hanya input, tidak saling terhubung: atas = lampu utama (L/H), tengah = TAIL, bawah = hazard (B/F)
@@ -420,8 +441,8 @@ function art() {
   <text class="cap" x="404" y="747">HAZARD</text>`;
 
   // Wiper: pin dari saklar wiper (A) & pin menuju wiper (B)
-  s += `<rect x="503" y="638" width="52" height="50" rx="7" fill="#eef1f4" stroke="#b0b8c1" stroke-dasharray="3 3"/>
-  <text class="cap" x="529" y="625">PIN WIPER DARI</text><text class="cap" x="529" y="633">SAKLAR WIPER</text>
+  s += `<rect x="503" y="638" width="87" height="50" rx="7" fill="#eef1f4" stroke="#b0b8c1" stroke-dasharray="3 3"/>
+  <text class="cap" x="546" y="625">PIN WIPER DARI</text><text class="cap" x="546" y="633">SAKLAR WIPER + WASHER</text>
   <rect x="557" y="583" width="146" height="34" rx="8" fill="#eef1f4" stroke="#b0b8c1" stroke-dasharray="3 3"/>
   <text class="cap" x="630" y="578">PIN WIPER MENUJU WIPER</text>
   <circle cx="488" cy="662" r="11" fill="url(#gChrome)" stroke="#59616b" filter="url(#shadow)"/>
@@ -461,6 +482,15 @@ function art() {
     <circle cx="822" cy="403" r="4" fill="url(#gChrome)" stroke="#59616b"/><circle cx="852" cy="430" r="4" fill="url(#gChrome)" stroke="#59616b"/></g>
   <text x="842" y="357" font-size="16" text-anchor="middle" fill="#1f2a3a">Wiper</text>`;
 
+  // Pompa washer & tombol washer kecil di bawah tuas wiper
+  s += `<rect x="802" y="592" width="100" height="40" rx="14" fill="url(#gMetal)" stroke="#59616b" filter="url(#shadow)"/>
+  <circle cx="830" cy="612" r="10" fill="#2a2f36" stroke="#59616b"/><text x="830" y="616" font-size="11" font-weight="700" text-anchor="middle" fill="#ffd54a">M</text>
+  <rect x="852" y="604" width="40" height="16" rx="4" fill="#3a4049"/>
+  <text class="cap" x="852" y="586">POMPA WASHER</text>
+  <circle cx="352" cy="782" r="9" fill="url(#gChrome)" stroke="#59616b" filter="url(#shadow)"/>
+  <circle id="wsCap" cx="352" cy="782" r="6" fill="#2a2f36"/><text x="352" y="785" font-size="7" font-weight="700" text-anchor="middle" fill="#ffd54a" pointer-events="none">W</text>
+  <text class="cap" x="352" y="799">WASHER</text>`;
+
   // Caption relay
   s += `<text class="cap" x="429" y="556">RELAY</text><text class="cap" x="87" y="568">MASSA</text><text class="cap" x="763" y="542">MASSA</text><text class="cap" x="429" y="571">SAKLAR KOMBINASI</text>`;
   return s;
@@ -473,7 +503,7 @@ function ctls() {
   return r('wiper', 314, 710, 78, 30) + r('sein', 467, 714, 52, 26) + r('lamp', 519, 714, 28, 26) + c('dim', 500, 704, 9) +
     r('hazard', 417, 705, 24, 16) + c('horn', 429, 738, 12) +
     c('dimA', 488, 662, 12) + r('fuse', 745, 604, 24, 88) +
-    c('knob', 607, 693, 15) + c('key', 675, 688, 13);
+    c('knob', 607, 693, 15) + c('key', 675, 688, 13) + c('wash', 352, 782, 11);
 }
 
 const CTL = {
@@ -517,9 +547,9 @@ function buildPins() {
 
 /* ---------- JALUR KABEL OTOMATIS: rapi, bengkok, lewat ruang kosong ---------- */
 const GC = 5, GW = 185, GH = 130, GY0 = 328;
-const OBS = [[60, 350, 400, 388], [395, 373, 459, 447], [209, 416, 347, 542], [502, 416, 640, 542], [128, 396, 177, 526], [673, 396, 723, 526],
+const OBS = [[60, 336, 400, 391], [395, 373, 459, 447], [209, 416, 347, 542], [502, 416, 640, 542], [128, 396, 177, 526], [673, 396, 723, 526],
   [362, 445, 497, 489], [97, 574, 153, 637], [130, 671, 160, 704], [312, 703, 548, 768], [474, 648, 502, 676], [590, 676, 624, 710],
-  [660, 673, 690, 703], [747, 603, 767, 691], [392, 794, 456, 836], [124, 789, 326, 850], [529, 789, 731, 850], [798, 342, 894, 438]];
+  [660, 673, 690, 703], [747, 603, 767, 691], [392, 794, 456, 836], [124, 789, 326, 850], [529, 789, 731, 850], [798, 342, 894, 438], [798, 582, 908, 638], [338, 771, 368, 806]];
 const BASE = new Uint8Array(GW * GH), USED = new Uint8Array(GW * GH), used = USED;
 const NST = GW * GH * 4, GCOST = new Float32Array(NST), PAR = new Int32Array(NST), CL = new Uint8Array(NST);
 const DX = [1, 0, -1, 0], DY = [0, 1, 0, -1];
@@ -662,10 +692,10 @@ const T = (id, t) => { const e = $id(id); if (e && e.textContent !== t) e.textCo
 const ANG = { needle: -60, levL: 0, levR: 0, knob: 0, key: 0, wiper: 0 };
 const TGT = { needle: -60, levL: 0, levR: 0, knob: 0, key: 0 };
 const PIV = { needle: [427, 405], levL: [392, 727], levR: [467, 727], knob: [607, 693], key: [675, 688], wiperArm: [822, 403] };
-let wiperRun = false, wiperFast = false, hornOn = false;
+let wiperRun = false, wiperFast = false, hornOn = false, pumpOn = false, parkOn = false, WET = 0;
 
 // Beban hanya aktif jika (+) dan E (massa) sama-sama terpasang
-const NEEDS_E = ['hl', 'hr', 'sl', 'sr', 'tl', 'tr', 'hn', 'g', 'bn', 'dB'];
+const NEEDS_E = ['hl', 'hr', 'sl', 'sr', 'tl', 'tr', 'hn', 'g', 'bn', 'dB', 'pw'];
 function applyVisuals() {
   const on = (id) => { const k = id.split('.')[0]; return R.on(id) && (!NEEDS_E.includes(k) || R.hasG(k + '.E')); };
   ['hl', 'hr'].forEach((id) => {
@@ -700,10 +730,13 @@ function applyVisuals() {
   T('dAt', DIM_T[[2, 0, 1][S.wiper]]);
   const hz = $id('hzt'); if (hz) { hz.setAttribute('fill', S.hazard ? '#ff4d3d' : 'none'); }
   const hb = $id('hbtn'); if (hb) hb.setAttribute('r', S.horn ? 6 : 7.5);
+  const wc = $id('wsCap'); if (wc) wc.setAttribute('r', S.wash ? 4.5 : 6);
+  pumpOn = on('pw.B'); O('pwspray', pumpOn ? 1 : 0);
   const swr = $id('swrem'); if (swr) swr.setAttribute('fill', S.brake ? '#e53935' : '#20242a');
   const bc = $id('btnCap'); if (bc) { bc.setAttribute('ry', S.btn ? 9 : 11); bc.setAttribute('cy', S.btn ? 814 : 812); bc.style.filter = S.btn ? 'brightness(.75)' : ''; }
   // Motor & klakson
-  wiperRun = on('dB.L') || on('dB.H'); wiperFast = on('dB.H');
+  wiperRun = on('dB.30') && (on('dB.L') || on('dB.H')); // B (30) dinamo harus dapat +12 V wiperFast = on('dB.H');
+  parkOn = on('dB.30') && on('dB.0'); // jalur S (parkir) hidup
   const hn = on('hn.30'); O('hornw', hn ? 1 : 0); hornOn = hn; hornSound(hn);
   // Pin & kabel
   PINS.forEach((p) => {
@@ -733,14 +766,34 @@ function loop(t) {
   for (const n in TGT) ANG[n] += (TGT[n] - ANG[n]) * k;
   rot('needle', ANG.needle, PIV.needle); rot('levL', ANG.levL, PIV.levL); rot('levR', ANG.levR, PIV.levR);
   rot('knob', ANG.knob, PIV.knob); rot('key', ANG.key, PIV.key);
-  rotV += ((wiperRun ? (wiperFast ? 1200 : 600) : 0) - rotV) * (1 - Math.pow(0.02, dt)); rotA = (rotA + rotV * dt) % 360;
+  // wiper jalan hanya jika rangkaian aktif; saklar OFF / kabel dicabut = berhenti
+  // (jika jalur S terpasang, wiper menyelesaikan satu sapuan ke posisi parkir lalu berhenti)
+  const parking = !wiperRun && parkOn && armP > 0.01;
+  const tgtV = wiperRun ? (wiperFast ? 1200 : 600) : parking ? 300 : 0;
+  rotV += (tgtV - rotV) * (1 - Math.pow(wiperRun || parking ? 0.02 : 0.00005, dt));
+  if (tgtV === 0 && rotV < 1) rotV = 0;
+  rotA = (rotA + rotV * dt) % 360;
   rot('rotor', rotA, [846, 379]);
-  // tuas wiper ikut bergerak menyapu mengikuti putaran motor, dan kembali ke posisi parkir saat motor mati
-  let sp = rotV * 0.35;
-  if (!wiperRun) { const m = armP % 360; if (m > 0.5) sp = Math.max(sp, 120); else { armP = 0; sp = 0; } }
-  armP = (armP + sp * dt) % 360;
+  const sp = wiperRun ? rotV * 0.35 : parking ? 120 : 0;
+  armP += sp * dt;
+  if (armP >= 360) armP = parking ? 0 : armP - 360;
   ANG.wiper = 30 * (0.5 - 0.5 * Math.cos((armP * Math.PI) / 180));
   rot('wiperArm', ANG.wiper, PIV.wiperArm);
+  // layar canvas: tiap sektor sapuan punya tingkat basah sendiri; pompa membasahi, blade membersihkan sektor yang baru dilewatinya
+  const ang = -90 + ANG.wiper * 6;
+  let any = false;
+  for (let k = 0; k < NB; k++) {
+    if (pumpOn) WETB[k] = Math.min(1, WETB[k] + dt * 0.8);
+    const c = -90 + 3 * k + 1.5;
+    if (sp > 1 && c >= Math.min(prevAng, ang) - 1.5 && c <= Math.max(prevAng, ang) + 1.5) WETB[k] = 0;
+    if (WETB[k] > 0.001) any = true;
+    const q = Math.round(WETB[k] * 20);
+    if (q !== WETQ[k]) { WETQ[k] = q; BINP[k].setAttribute('fill-opacity', (q / 20).toFixed(2)); }
+  }
+  prevAng = ang;
+  const fl = $id('fogLayer'); if (fl) fl.style.display = any ? '' : 'none';
+  O('bigwiper', sp > 1 ? 1 : 0);
+  rot('bigwiper', ang, [462, 978]);
   const h = $id('horn');
   if (h) { wob += dt * 80; h.setAttribute('transform', hornOn ? `translate(${(Math.sin(wob) * 0.9).toFixed(2)} ${(Math.cos(wob * 1.3) * 0.6).toFixed(2)})` : ''); }
   requestAnimationFrame(loop);
@@ -793,7 +846,7 @@ window.addEventListener('pointermove', (e) => {
 });
 window.addEventListener('pointerup', (e) => {
   if (S.btn) { S.btn = false; refresh(); }
-  if (S.horn) { S.horn = false; refresh(); }
+  if (S.horn || S.wash) { S.horn = false; S.wash = false; refresh(); }
   if (!startId) return;
   const id = startId; startId = null;
   if (dragPath) { dragPath.remove(); dragPath = null; }
@@ -808,7 +861,7 @@ window.addEventListener('pointerup', (e) => {
 window.addEventListener('pointercancel', () => {
   startId = null; dragging = false; if (dragPath) { dragPath.remove(); dragPath = null; }
   if (S.btn) { S.btn = false; refresh(); }
-  if (S.horn) { S.horn = false; refresh(); }
+  if (S.horn || S.wash) { S.horn = false; S.wash = false; refresh(); }
 });
 
 $id('ctls').addEventListener('pointerdown', (e) => {
@@ -817,6 +870,7 @@ $id('ctls').addEventListener('pointerdown', (e) => {
   const k = c.getAttribute('data-ctl');
   if (k === 'btn') { S.btn = true; refresh(); }
   else if (k === 'horn') { S.horn = true; refresh(); }
+  else if (k === 'wash') { S.wash = true; refresh(); }
 });
 $id('ctls').addEventListener('click', (e) => {
   const c = e.target.closest('.ctl'); if (!c) return;
@@ -852,7 +906,7 @@ const FULL = {
     ['cs.BF', 'fl.B', O_], ['fl.L', 'cs.LF', Y_], ['cs.Ls', 'sl.S', O_], ['cs.Ls', 'tl.S', O_], ['cs.Rs', 'sr.S', O_], ['cs.Rs', 'tr.S', O_],
     ['fu.30', 'tl.REM', B_], ['fu.30', 'tr.REM', B_], ['kn.15', 'tl.R', B_], ['kn.15', 'tr.R', B_],
     ['r3.85', 'cs.Hz', B_], ['r3.87', 'hn.30', Y_],
-    ['dA.L', 'dB.L', G_], ['dA.H', 'dB.H', O_], ['dA.0', 'dB.0', B_],
+    ['dA.L', 'dB.L', G_], ['dA.H', 'dB.H', O_], ['dA.0', 'dB.0', B_], ['bt.4', 'dB.30', R_], ['ig.c', 'ws.X', R_], ['ws.Y', 'pw.B', Y_], ['pw.E', 'wp.1', K_],
     ['r0.85', 'gl1', K_], ['r1.85', 'gl2', K_], ['r2.85', 'gl0', K_], ['hl.E', 'gl3', K_], ['sl.E', 'gl4', K_], ['tl.E', 'gl5', K_], ['g.E', 'gl0', K_], ['hn.E', 'gl1', K_],
     ['hr.E', 'wp.2', K_], ['sr.E', 'wp.3', K_], ['tr.E', 'wp.4', K_], ['bn.E', 'wp.4', K_], ['fl.E', 'wp.E', K_], ['dB.E', 'wp.1', K_]
   ]
@@ -873,8 +927,8 @@ const PRESETS = [
     st: { key: true }, w: [...KEYF, ['bt.2', 'kn.30', R_], ['kn.15', 'tl.R', B_], ['kn.15', 'tr.R', B_], ...GE('tl.E', 'tr.E')] },
   { n: 'Klakson (relay)', note: 'Tekan dan tahan tombol H di tengah saklar kombinasi: pin H bawah terhubung massa, koil relay 1 aktif, klakson berbunyi.',
     st: {}, w: [['bp.B+', 'bt.1', R_], ['bp.B+', 'bt.3', R_], ['bt.2', 'r0.86', R_], ['r0.85', 'cs.Hz', B_], ['bt.4', 'r0.30', R_], ['r0.87', 'hn.30', Y_], ...GE('hn.E')] },
-  { n: 'Wiper', note: 'B+ ke kunci ke sekring ke pin 30 saklar wiper. Ketuk tuas kiri untuk OFF / LOW / HIGH. Motor berputar jika E motor terpasang.',
-    st: { key: true, wiper: 1 }, w: [...KEYF, ['bt.2', 'dA.30', Y_], ['dA.L', 'dB.L', G_], ['dA.H', 'dB.H', O_], ['dA.0', 'dB.0', B_], ...GE('dB.E')] }
+  { n: 'Wiper + washer', note: 'Sesuai gambar: aki ke sekring ke kunci (B), IG kunci ke baris IG. Dari IG: ke X saklar washer, ke + saklar wiper (30), ke B dinamo (30). Saklar wiper: S (0) ke S dinamo, L ke +1, H ke +2. Y saklar washer ke pompa washer. Ketuk tuas kiri untuk OFF / LOW / HIGH, tahan tombol W kecil di bawah tuas wiper untuk menyemprot. Layar canvas buram saat disemprot; bagian yang dilewati wiper menjadi bersih sesuai gerakan wiper.',
+    st: { key: true, wiper: 1 }, w: [['bp.B+', 'bt.15', R_], ['bt.B+', 'ky.15', R_], ['ky.IG', 'ig.IG', R_], ['ig.a', 'ws.X', R_], ['ig.b', 'dA.30', R_], ['ig.c', 'dB.30', R_], ['dA.0', 'dB.0', B_], ['dA.L', 'dB.L', G_], ['dA.H', 'dB.H', O_], ['ws.Y', 'pw.B', Y_], ['dB.E', 'wp.1', K_], ['pw.E', 'wp.2', K_]] }
 ];
 const presetsEl = $id('presets');
 PRESETS.forEach((p) => {
@@ -882,7 +936,7 @@ PRESETS.forEach((p) => {
   b.addEventListener('click', () => { audioInit(); resetStates(); S.wires = p.w.map((w) => ({ a: w[0], b: w[1], c: w[2], neat: true })); Object.assign(S, p.st); $id('note').textContent = p.note; drawWires(); refresh(); });
   presetsEl.appendChild(b);
 });
-function resetStates() { Object.assign(S, { wiper: 0, dim: 0, horn: false, lamp: 0, sein: 0, hazard: false, dimA: 0, dimB: 0, knob: false, key: false, brake: false, btn: false }); }
+function resetStates() { Object.assign(S, { wiper: 0, dim: 0, horn: false, wash: false, lamp: 0, sein: 0, hazard: false, dimA: 0, dimB: 0, knob: false, key: false, brake: false, btn: false }); }
 $id('btnClear').addEventListener('click', () => { S.wires = []; $id('note').textContent = ''; drawWires(); refresh(); });
 $id('btnReset').addEventListener('click', () => { S.wires = []; resetStates(); $id('note').textContent = ''; drawWires(); refresh(); });
 
@@ -928,6 +982,23 @@ $id('zFit').addEventListener('click', () => applyZoom((window.innerWidth - 4) / 
 window.addEventListener('resize', () => applyZoom(ZOOM));
 let z0 = 1; try { z0 = parseFloat(localStorage.getItem('wiring-zoom')) || 1; } catch (e) { }
 applyZoom(z0);
+// tetesan air di layar (dibuat sekali, tampil sesuai tingkat basah)
+(function () {
+  const g = $id('drops'); let seed = 7; const rnd = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+  for (let k = 0; k < 46; k++) g.appendChild(el('circle', { cx: (12 + rnd() * 900).toFixed(0), cy: (336 + rnd() * 620).toFixed(0), r: (2 + rnd() * 6).toFixed(1), fill: '#fff', 'fill-opacity': '.45', stroke: '#bfe3f5', 'stroke-opacity': '.7' }));
+})();
+// sektor basah (60 irisan sudut di sekitar poros wiper besar) dipakai sebagai mask lapisan buram
+const NB = 60, WETB = new Float32Array(NB), WETQ = new Int8Array(NB).fill(-1), BINP = [];
+let prevAng = -90;
+(function () {
+  const g = $id('wetBins'), R = 1200, px = 462, py = 978;
+  for (let k = 0; k < NB; k++) {
+    const a0 = ((-90 + 3 * k - 0.5) * Math.PI) / 180, a1 = ((-90 + 3 * (k + 1) + 0.5) * Math.PI) / 180;
+    const pts = `${px},${py} ${(px + R * Math.sin(a0)).toFixed(1)},${(py - R * Math.cos(a0)).toFixed(1)} ${(px + R * Math.sin(a1)).toFixed(1)},${(py - R * Math.cos(a1)).toFixed(1)}`;
+    const poly = el('polygon', { points: pts, fill: '#fff', 'fill-opacity': 0 });
+    g.appendChild(poly); BINP.push(poly);
+  }
+})();
 </script>
 </body>
 </html>
